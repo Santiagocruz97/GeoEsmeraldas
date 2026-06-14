@@ -728,6 +728,341 @@
     }
     .footer-note { font-size: 0.7rem; color: rgba(168,207,186,0.22); }
 
+    /* ─── CARRITO ────────────────────────────────────────────── */
+
+    /* Ícono carrito en nav */
+    .nav-cart-btn {
+      position: relative;
+      background: none;
+      border: 1px solid rgba(168,207,186,0.3);
+      border-radius: 2px;
+      color: var(--verde-cristal);
+      cursor: pointer;
+      padding: 0.38rem 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .nav-cart-btn:hover { border-color: var(--verde-cristal); color: var(--crema-logo); }
+    .nav-cart-btn svg { width: 16px; height: 16px; }
+    .cart-badge {
+      position: absolute;
+      top: -7px; right: -7px;
+      background: #25D366;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      width: 17px; height: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+    .cart-badge.visible { display: flex; }
+
+    /* Botón añadir al carrito en cards */
+    .btn-carrito {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--verde-profundo);
+      color: var(--crema-logo);
+      padding: 0.42rem 0.9rem;
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: var(--font-body);
+    }
+    .btn-carrito:hover { background: #0F2419; }
+    .btn-carrito svg { width: 14px; height: 14px; }
+    .btn-carrito.agregado {
+      background: var(--verde-esmeralda);
+      cursor: default;
+    }
+
+    /* Acciones dobles en gem-footer */
+    .gem-footer-btns {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Overlay oscuro */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,20,14,0.55);
+      z-index: 299;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* Panel lateral carrito */
+    .cart-panel {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: min(460px, 100vw);
+      background: var(--blanco);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: -8px 0 40px rgba(13,43,30,0.18);
+    }
+    .cart-panel.open { transform: translateX(0); }
+
+    .cart-header {
+      background: var(--verde-profundo);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .cart-header-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--crema-logo);
+    }
+    .cart-close {
+      background: none;
+      border: none;
+      color: var(--verde-cristal);
+      cursor: pointer;
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 0.2rem 0.5rem;
+      transition: color 0.2s;
+    }
+    .cart-close:hover { color: var(--crema-logo); }
+
+    /* Zona scrollable: items + formulario */
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0;
+      min-height: 0; /* crítico para que flex+scroll funcione */
+    }
+
+    /* Sección items */
+    .cart-items-section {
+      padding: 1rem 1.5rem;
+      border-bottom: 2px solid var(--crema);
+    }
+
+    /* Estado vacío */
+    .cart-empty {
+      text-align: center;
+      padding: 3.5rem 2rem;
+      color: var(--gris-texto);
+    }
+    .cart-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .cart-empty-text { font-size: 0.9rem; line-height: 1.7; }
+
+    /* Items del carrito — más espacio */
+    .cart-item {
+      display: flex;
+      gap: 1.1rem;
+      align-items: center;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid rgba(27,61,47,0.06);
+    }
+    .cart-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .cart-item:first-child { padding-top: 0; }
+    .cart-item-gem {
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, var(--verde-profundo), var(--verde-esmeralda));
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--verde-profundo);
+      margin-bottom: 0.15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cart-item-origin {
+      font-size: 0.68rem;
+      color: var(--verde-esmeralda);
+      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .cart-item-price {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--verde-profundo);
+    }
+    .cart-item-remove {
+      background: rgba(27,61,47,0.05);
+      border: none;
+      color: rgba(27,61,47,0.35);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.5rem;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .cart-item-remove:hover { background: #FEE2E2; color: #DC2626; }
+
+    /* Sección formulario dentro del scroll */
+    .cart-form-section {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+    .cart-form-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--verde-profundo);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Resumen totales — fijo en la parte baja */
+    .cart-summary {
+      background: var(--crema);
+      padding: 1rem 1.5rem 1.25rem;
+      border-top: 2px solid rgba(27,61,47,0.08);
+      flex-shrink: 0;
+    }
+    .cart-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+      font-size: 0.82rem;
+      color: var(--gris-texto);
+    }
+    .cart-summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(27,61,47,0.1);
+      margin-top: 0.35rem;
+      margin-bottom: 1rem;
+    }
+    .cart-total-label {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--verde-profundo);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .cart-total-amount {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--verde-profundo);
+    }
+
+    /* Botón pagar con Wompi */
+    .btn-wompi {
+      width: 100%;
+      background: var(--verde-profundo);
+      color: var(--crema-logo);
+      border: none;
+      padding: 0.9rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem;
+      transition: background 0.2s;
+      font-family: var(--font-body);
+    }
+    .btn-wompi:hover { background: #0F2419; }
+    .wompi-logo {
+      background: #fff;
+      border-radius: 2px;
+      padding: 1px 5px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #1B3D2F;
+      letter-spacing: 0.05em;
+    }
+    .cart-note {
+      font-size: 0.7rem;
+      color: rgba(27,61,47,0.4);
+      text-align: center;
+      line-height: 1.55;
+    }
+    .cart-note a { color: var(--verde-esmeralda); }
+
+    /* ─── FORMULARIO DATOS ENTREGA ───────────────────────────── */
+    .checkout-form { }
+    .checkout-form-title { display: none; } /* usa cart-form-title */
+    .form-row { margin-bottom: 0.75rem; }
+    .form-row.two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-label {
+      font-size: 0.67rem;
+      font-weight: 600;
+      color: var(--gris-texto);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .form-input {
+      border: 1.5px solid rgba(27,61,47,0.15);
+      border-radius: 3px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+      color: var(--tierra);
+      background: var(--blanco);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+    }
+    .form-input:focus {
+      border-color: var(--verde-esmeralda);
+      box-shadow: 0 0 0 3px rgba(58,125,90,0.1);
+    }
+    .form-input::placeholder { color: rgba(27,61,47,0.28); font-size: 0.82rem; }
+    .form-textarea { resize: none; line-height: 1.5; }
+    .form-error {
+      background: #FEF2F2;
+      border: 1px solid #FCA5A5;
+      border-radius: 3px;
+      padding: 0.55rem 0.8rem;
+      font-size: 0.78rem;
+      color: #DC2626;
+      margin-top: 0.6rem;
+      line-height: 1.4;
+    }
+
     /* ─── BOTÓN FLOTANTE WHATSAPP ────────────────────────────── */
     .wa-float {
       position: fixed;
@@ -885,6 +1220,105 @@
 </head>
 <body>
 
+  <!-- OVERLAY CARRITO -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <!-- PANEL CARRITO -->
+  <div class="cart-panel" id="cartPanel" role="dialog" aria-label="Carrito de compras">
+    <div class="cart-header">
+      <div class="cart-header-title">💎 Tu selección</div>
+      <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <div class="cart-body" id="cartBody">
+
+      <!-- ZONA 1: Items -->
+      <div class="cart-items-section">
+        <div class="cart-empty" id="cartEmpty">
+          <div class="cart-empty-icon">🛍️</div>
+          <div class="cart-empty-text">Aún no has agregado ninguna pieza.<br>Explora el catálogo y añade las que te interesen.</div>
+        </div>
+        <div id="cartItems"></div>
+      </div>
+
+      <!-- ZONA 2: Formulario de entrega (oculto hasta que haya items) -->
+      <div class="cart-form-section" id="cartFormSection" style="display:none">
+        <div class="cart-form-title">📦 Datos de entrega</div>
+        <div class="checkout-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nombre completo *</label>
+              <input type="text" id="fNombre" class="form-input" placeholder="Tu nombre completo" />
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label class="form-label">Cédula *</label>
+              <input type="text" id="fCedula" class="form-input" placeholder="CC o NIT" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp *</label>
+              <input type="tel" id="fTelefono" class="form-input" placeholder="3XX XXX XXXX" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" id="fEmail" class="form-input" placeholder="correo@ejemplo.com" />
+            </div>
+          </div>
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label class="form-label">Ciudad *</label>
+              <input type="text" id="fCiudad" class="form-input" placeholder="Bogotá, Medellín…" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Departamento *</label>
+              <input type="text" id="fDepartamento" class="form-input" placeholder="Cundinamarca…" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Dirección completa *</label>
+              <input type="text" id="fDireccion" class="form-input" placeholder="Calle, carrera, apto, barrio" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Notas adicionales</label>
+              <textarea id="fNotas" class="form-input form-textarea" placeholder="Referencias, instrucciones especiales…" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="form-error" id="formError" style="display:none">
+            ⚠️ Por favor completa todos los campos obligatorios antes de pagar.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cart-body -->
+
+    <div class="cart-summary" id="cartSummary" style="display:none">
+      <div class="cart-summary-row">
+        <span>Subtotal</span>
+        <span id="summarySubtotal">$0</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>Envío</span>
+        <span>A coordinar</span>
+      </div>
+      <div class="cart-summary-total">
+        <span class="cart-total-label">Total</span>
+        <span class="cart-total-amount" id="summaryTotal">$0</span>
+      </div>
+      <div id="wompiContainer"></div>
+      <p class="cart-note">
+        Pago seguro vía <strong>PSE</strong> · Transferencia desde tu banco · ~$900 COP tarifa fija.<br>
+        ¿Prefieres hablar primero?
+        <a href="https://wa.me/573000000000?text=💎%20Hola!%20Vengo%20de%20la%20web%20y%20quiero%20completar%20mi%20compra%20con%20asesor" target="_blank">escríbenos por WhatsApp</a>.
+      </p>
+    </div>
+  </div>
+
   <!-- BOTÓN FLOTANTE WHATSAPP -->
   <a href="https://wa.me/573000000000?text=💎%20¡Hola!%20Vengo%20desde%20la%20web%20de%20GeoEsmeraldas%20y%20me%20gustaría%20hablar%20con%20un%20asesor%20🌿"
      class="wa-float" target="_blank" rel="noopener" aria-label="Contáctanos por WhatsApp">
@@ -920,6 +1354,13 @@
       <li><a href="#nosotros">Nosotros</a></li>
       <li><a href="#contacto" class="nav-cta">Contactar</a></li>
     </ul>
+    <button class="nav-cart-btn" id="cartBtn" aria-label="Ver carrito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      Carrito
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
     <button class="hamburger" id="hamburger" aria-label="Abrir menú">
       <span></span><span></span><span></span>
     </button>
@@ -1082,7 +1523,7 @@
         </a>
       </div>
       <div class="catalogo-grid">
-        <div class="gem-card reveal">
+        <div class="gem-card reveal" data-id="muzo-235" data-name="Esmeralda Muzo" data-origin="Muzo, Boyacá · Colombia" data-price="4500000" data-emoji="💎">
           <div class="gem-card-img">
             💎
             <span class="gem-badge">Disponible</span>
@@ -1097,16 +1538,22 @@
               <span class="gem-spec">Certificada</span>
             </div>
             <div class="gem-footer">
-              <div class="gem-price">Consultar <span>precio</span></div>
-              <a href="https://wa.me/573000000000?text=💎%20¡Hola!%20Vengo%20desde%20la%20web%20de%20GeoEsmeraldas%20y%20estoy%20interesado%20en%20la%20%E2%9C%A8%20Esmeralda%20Muzo%20de%202.35%20ct.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%20y%20el%20precio%3F%20%F0%9F%8C%BF"
-                 class="btn-consultar" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                Consultar por WhatsApp
-              </a>
+              <div class="gem-price">$4.500.000 <span>COP</span></div>
+              <div class="gem-footer-btns">
+                <button class="btn-carrito" onclick="addToCart(this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                  Añadir
+                </button>
+                <a href="https://wa.me/573000000000?text=💎%20¡Hola!%20Vengo%20desde%20la%20web%20de%20GeoEsmeraldas%20y%20estoy%20interesado%20en%20la%20%E2%9C%A8%20Esmeralda%20Muzo%20de%202.35%20ct.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%20y%20el%20precio%3F%20%F0%9F%8C%BF"
+                   class="btn-consultar" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                  WhatsApp
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <div class="gem-card reveal">
+        <div class="gem-card reveal" data-id="coscuez-182" data-name="Esmeralda Coscuez" data-origin="Coscuez, Boyacá · Colombia" data-price="2800000" data-emoji="💚">
           <div class="gem-card-img" style="background: linear-gradient(135deg, #0E2C1A 0%, #2A6040 100%)">
             💚
             <span class="gem-badge">Disponible</span>
@@ -1121,12 +1568,18 @@
               <span class="gem-spec">Certificada</span>
             </div>
             <div class="gem-footer">
-              <div class="gem-price">Consultar <span>precio</span></div>
-              <a href="https://wa.me/573000000000?text=💎%20¡Hola!%20Vengo%20desde%20la%20web%20de%20GeoEsmeraldas%20y%20estoy%20interesado%20en%20la%20%E2%9C%A8%20Esmeralda%20Coscuez%20de%201.82%20ct.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%20y%20el%20precio%3F%20%F0%9F%8C%BF"
-                 class="btn-consultar" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                Consultar por WhatsApp
-              </a>
+              <div class="gem-price">$2.800.000 <span>COP</span></div>
+              <div class="gem-footer-btns">
+                <button class="btn-carrito" onclick="addToCart(this)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                  Añadir
+                </button>
+                <a href="https://wa.me/573000000000?text=💎%20¡Hola!%20Vengo%20desde%20la%20web%20de%20GeoEsmeraldas%20y%20estoy%20interesado%20en%20la%20%E2%9C%A8%20Esmeralda%20Coscuez%20de%201.82%20ct.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%20y%20el%20precio%3F%20%F0%9F%8C%BF"
+                   class="btn-consultar" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                  WhatsApp
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -1357,16 +1810,246 @@
     </div>
   </footer>
 
+  <!-- SDK Wompi -->
+  <script src="https://checkout.wompi.co/widget.js"></script>
+
   <script>
-    // Hamburger
+    // ── CONSTANTES WOMPI ─────────────────────────────────────────
+    // ⚠️  Reemplaza por tu llave pública real cuando tengas la cuenta aprobada
+    // Sandbox (pruebas): pub_test_XXXXXXXXXX
+    // Producción:        pub_prod_XXXXXXXXXX
+    const WOMPI_PUBLIC_KEY = 'pub_test_REEMPLAZAR_CON_TU_LLAVE';
+    const WOMPI_CURRENCY   = 'COP';
+
+    // ── ESTADO DEL CARRITO ───────────────────────────────────────
+    let cart = [];  // [{id, name, origin, price, emoji}]
+
+    // ── REFERENCIAS DOM ──────────────────────────────────────────
+    const cartPanel   = document.getElementById('cartPanel');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartBadge   = document.getElementById('cartBadge');
+    const cartBody    = document.getElementById('cartBody');
+    const cartEmpty   = document.getElementById('cartEmpty');
+    const cartItems   = document.getElementById('cartItems');
+    const cartSummary = document.getElementById('cartSummary');
+    const wompiContainer = document.getElementById('wompiContainer');
+
+    // ── ABRIR / CERRAR PANEL ─────────────────────────────────────
+    function openCart() {
+      cartPanel.classList.add('open');
+      cartOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCart() {
+      cartPanel.classList.remove('open');
+      cartOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('cartBtn').addEventListener('click', openCart);
+    document.getElementById('cartClose').addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    // ── AÑADIR AL CARRITO ────────────────────────────────────────
+    function addToCart(btn) {
+      const card = btn.closest('.gem-card');
+      const id     = card.dataset.id;
+      const name   = card.dataset.name;
+      const origin = card.dataset.origin;
+      const price  = parseInt(card.dataset.price);
+      const emoji  = card.dataset.emoji;
+
+      // Cada esmeralda es única — no se puede agregar dos veces
+      if (cart.find(i => i.id === id)) {
+        btn.textContent = '✓ Agregada';
+        setTimeout(() => openCart(), 400);
+        return;
+      }
+
+      cart.push({ id, name, origin, price, emoji });
+
+      // Feedback visual en el botón
+      btn.innerHTML = '✓ Agregada';
+      btn.classList.add('agregado');
+      btn.disabled = true;
+
+      updateCartUI();
+      openCart();
+
+      // GA4 event
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'add_to_cart', {
+          currency: 'COP',
+          value: price,
+          items: [{ item_id: id, item_name: name, price: price }]
+        });
+      }
+    }
+
+    // ── ELIMINAR DEL CARRITO ──────────────────────────────────────
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+
+      // Rehabilitar botón en la card
+      const card = document.querySelector(`.gem-card[data-id="${id}"]`);
+      if (card) {
+        const btn = card.querySelector('.btn-carrito');
+        if (btn) {
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Añadir`;
+          btn.classList.remove('agregado');
+          btn.disabled = false;
+        }
+      }
+      updateCartUI();
+    }
+
+    // ── ACTUALIZAR UI ────────────────────────────────────────────
+    function formatCOP(n) {
+      return '$' + n.toLocaleString('es-CO');
+    }
+
+    function updateCartUI() {
+      const count = cart.length;
+      const total = cart.reduce((s, i) => s + i.price, 0);
+
+      // Badge
+      cartBadge.textContent = count;
+      cartBadge.classList.toggle('visible', count > 0);
+
+      // Vacío vs items
+      cartEmpty.style.display   = count === 0 ? 'block' : 'none';
+      cartSummary.style.display = count === 0 ? 'none'  : 'block';
+
+      // Mostrar/ocultar formulario
+      const formSection = document.getElementById('cartFormSection');
+      if (formSection) formSection.style.display = count === 0 ? 'none' : 'block';
+
+      // Renderizar items
+      cartItems.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-gem">${item.emoji}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-origin">${item.origin}</div>
+            <div class="cart-item-price">${formatCOP(item.price)} COP</div>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart('${item.id}')" aria-label="Eliminar">✕</button>
+        </div>
+      `).join('');
+
+      // Totales
+      document.getElementById('summarySubtotal').textContent = formatCOP(total) + ' COP';
+      document.getElementById('summaryTotal').textContent    = formatCOP(total) + ' COP';
+
+      // Widget Wompi
+      renderWompi(total);
+    }
+
+    // ── VALIDAR FORMULARIO ───────────────────────────────────────
+    function getFormData() {
+      return {
+        nombre:      document.getElementById('fNombre').value.trim(),
+        cedula:      document.getElementById('fCedula').value.trim(),
+        telefono:    document.getElementById('fTelefono').value.trim(),
+        email:       document.getElementById('fEmail').value.trim(),
+        ciudad:      document.getElementById('fCiudad').value.trim(),
+        departamento:document.getElementById('fDepartamento').value.trim(),
+        direccion:   document.getElementById('fDireccion').value.trim(),
+        notas:       document.getElementById('fNotas').value.trim(),
+      };
+    }
+
+    function validarFormulario() {
+      const f = getFormData();
+      const error = document.getElementById('formError');
+      const requeridos = ['nombre','cedula','telefono','email','ciudad','departamento','direccion'];
+      const incompleto = requeridos.some(k => !f[k]);
+      if (incompleto) {
+        error.style.display = 'block';
+        // Highlight campos vacíos
+        requeridos.forEach(k => {
+          const el = document.getElementById('f' + k.charAt(0).toUpperCase() + k.slice(1));
+          if (el) el.style.borderColor = !f[k] ? '#FCA5A5' : '';
+        });
+        return null;
+      }
+      error.style.display = 'none';
+      return f;
+    }
+
+    // Limpiar errores al escribir
+    ['fNombre','fCedula','fTelefono','fEmail','fCiudad','fDepartamento','fDireccion'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', function() {
+        this.style.borderColor = '';
+        document.getElementById('formError').style.display = 'none';
+        // Re-renderizar wompi si el form está completo
+        const total = cart.reduce((s,i) => s+i.price, 0);
+        if (total > 0) renderWompi(total);
+      });
+    });
+
+    // ── WIDGET WOMPI ─────────────────────────────────────────────
+    function renderWompi(totalCOP) {
+      wompiContainer.innerHTML = '';
+      if (totalCOP === 0) return;
+
+      const amountCentavos = totalCOP * 100;
+      const f = getFormData();
+
+      // Referencia con nombre y timestamp para trazabilidad
+      const nombreSlug = (f.nombre || 'cliente').replace(/\s+/g,'-').substring(0,20);
+      const ref = `GEO-WEB-${nombreSlug}-${Date.now()}`;
+
+      const desc = cart.map(i => i.name).join(' + ');
+
+      const btn = document.createElement('button');
+      btn.className = 'btn-wompi';
+      btn.setAttribute('data-wompi-public-key',      WOMPI_PUBLIC_KEY);
+      btn.setAttribute('data-wompi-currency',         WOMPI_CURRENCY);
+      btn.setAttribute('data-wompi-amount-in-cents',  String(amountCentavos));
+      btn.setAttribute('data-wompi-reference',        ref);
+      btn.setAttribute('data-wompi-signature:integrity', '');
+      btn.setAttribute('data-wompi-payment-methods',  'PSE');
+
+      // Pre-llenar email del cliente en Wompi si está disponible
+      if (f.email) btn.setAttribute('data-wompi-customer-data:email', f.email);
+
+      btn.innerHTML = `<span class="wompi-logo">wompi</span> Pagar por PSE · ${formatCOP(totalCOP)} COP`;
+
+      // Interceptar clic para validar formulario primero
+      btn.addEventListener('click', function(e) {
+        const datos = validarFormulario();
+        if (!datos) {
+          e.preventDefault();
+          e.stopPropagation();
+          // Scroll al formulario
+          document.getElementById('formError').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
+        // GA4 begin_checkout con datos de entrega
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'begin_checkout', {
+            currency: 'COP',
+            value: totalCOP,
+            items: cart.map(i => ({ item_id: i.id, item_name: i.name, price: i.price }))
+          });
+        }
+      });
+
+      wompiContainer.appendChild(btn);
+      if (window.WidgetCheckout) new window.WidgetCheckout(btn);
+    }
+
+    // ── NAV / HAMBURGER ──────────────────────────────────────────
     const hamburger = document.getElementById('hamburger');
     const navLinks  = document.getElementById('navLinks');
     hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
     navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
-    // Scroll reveal
+    // ── SCROLL REVEAL ────────────────────────────────────────────
     const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }),
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      }),
       { threshold: 0.12 }
     );
     document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
